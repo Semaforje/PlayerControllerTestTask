@@ -78,10 +78,16 @@ public class BaseTest {
                 .statusCode(status)
                 .extract().jsonPath();
 
-        Integer id = response.getInt("id");
-        assertThat(id).isNotNull();
+        Map<String, Object> player = response.getMap("$");
+        assertThat(player.get("id")).isNotNull();
+        assertThat(player.get("age")).isEqualTo(age);
+        assertThat(player.get("gender")).isEqualTo(gender);
+        assertThat(player.get("login")).isEqualTo(login);
+        assertThat(player.get("screenName")).isEqualTo(screenName);
+        assertThat(player.get("password")).isEqualTo(password);
+        assertThat(player.get("role")).isEqualTo(role);
 
-        return id;
+        return (Integer) player.get("id");
     }
 
     protected void getPlayerTest(Integer playerId, Integer status){
