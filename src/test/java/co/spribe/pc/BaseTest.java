@@ -6,7 +6,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeAll;
-import co.spribe.pc.api.ApiClient;
 
 import java.util.HashMap;
 import java.util.List;
@@ -157,7 +156,8 @@ public class BaseTest {
                 .statusCode(status)
                 .extract().jsonPath();
 
-        assertThat(id).isNotNull();
+        Integer returnedId = response.getInt("id");
+        assertThat(returnedId).isNotNull();
     }
 
     protected void deletePlayerTest(String editor, Integer playerId, Integer status){
