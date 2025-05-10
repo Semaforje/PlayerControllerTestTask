@@ -12,14 +12,14 @@ import static io.restassured.RestAssured.given;
 
 public class UpdatePlayerRequest implements Request {
 
-    protected Response updatePlayerTest(String editor, Integer id, Player player){
+    public static Response updatePlayerRequest(String editor, Player ogPlayer, Player newPlayer){
 
         return given()
                 .filter(new AllureRestAssured())
                 .spec(RequestSpecFactory.getDefaultSpec())
                 .pathParam(Constants.EDITOR_QUERY_PARAM, editor)
-                .pathParam("id", id)
-                .body(player)
+                .pathParam(Constants.ID_QUERY_PARAM, ogPlayer.getId())
+                .body(newPlayer)
                 .when()
                 .patch(Constants.UPDATE_URI);
     }

@@ -5,10 +5,8 @@ import io.restassured.response.Response;
 
 public class CreatePlayerResponse {
 
-    public static Player createPlayerResponse(Response response, Integer statusCode){
-        response.then()
-                .statusCode(statusCode);
+    public static Response createPlayerResponse(Response response){
 
-        return response.as(Player.class);
+        return response;
     }
 }

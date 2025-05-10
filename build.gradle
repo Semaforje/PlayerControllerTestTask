@@ -21,10 +21,10 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.17.0'
 	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.0'
 
-	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+	implementation 'org.junit.jupiter:junit-jupiter:5.10.1'
 	implementation 'io.rest-assured:rest-assured:5.4.0'
-	testImplementation 'org.assertj:assertj-core:3.25.1'
-	testImplementation 'io.qameta.allure:allure-rest-assured:2.24.0'
+	implementation 'org.assertj:assertj-core:3.25.1'
+	implementation 'io.qameta.allure:allure-rest-assured:2.24.0'
 }
 
 tasks.named('test') {

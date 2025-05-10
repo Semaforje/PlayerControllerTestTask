@@ -1,495 +1,430 @@
-//package co.spribe.pc.update;
-//
-//import co.spribe.pc.BaseTest;
-//import co.spribe.pc.TestDataHelper;
-//import org.apache.http.HttpStatus;
-//import org.junit.jupiter.api.Test;
-//import co.spribe.pc.Constants;
-//
-//import java.util.Map;
-//
-//public class UpdatePlayerTest extends BaseTest {
-//    Map<String, Integer> updateUsers = createTestData();
-//
-//    @Test
-//    void updateUserAsSupervisorTest(){
-//        updatePlayerTest(Constants.SUPERVISOR,
-//                updateUsers.get("player"),
-//                16,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.SUPERVISOR,
-//                updateUsers.get("admin"),
-//                60,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "admin",
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.SUPERVISOR,
-//                updateUsers.get("supervisor"),
-//                25,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "supervisor",
-//                HttpStatus.SC_OK);
-//    }
-//
-//    @Test
-//    void updateUserAsAdminTest(){
-//        updatePlayerTest(Constants.ADMIN,
-//                updateUsers.get("player"),
-//                16,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.ADMIN,
-//                updateUsers.get("admin"),
-//                60,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "admin",
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.ADMIN,
-//                updateUsers.get("superuser"),
-//                25,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "supervisor",
-//                HttpStatus.SC_BAD_REQUEST);
-//    }
-//
-//    @Test
-//    void updateUserAsPlayerTest(){
-//        updatePlayerTest(Constants.PLAYER,
-//                updateUsers.get("player"),
-//                16,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_BAD_REQUEST);
-//
-//        updatePlayerTest(Constants.PLAYER,
-//                updateUsers.get("admin"),
-//                60,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "admin",
-//                HttpStatus.SC_BAD_REQUEST);
-//
-//        updatePlayerTest(Constants.PLAYER,
-//                updateUsers.get("superuser"),
-//                25,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "supervisor",
-//                HttpStatus.SC_BAD_REQUEST);
-//    }
-//
-//    @Test
-//    void updatePlayerAsThemselvesTest(){
-//        updatePlayerTest(Constants.PLAYER,
-//                testUsers.get("player"),
-//                16,
-//                "male",
-//                Constants.PLAYER,
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.PLAYER,
-//                testUsers.get("player"),
-//                17,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.PLAYER,
-//                testUsers.get("player"),
-//                null,
-//                "female",
-//                null,
-//                null,
-//                null,
-//                null,
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.PLAYER,
-//                testUsers.get("player"),
-//                null,
-//                null,
-//                null,
-//                TestDataHelper.randomScreenName(),
-//                null,
-//                null,
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.PLAYER,
-//                testUsers.get("player"),
-//                null,
-//                null,
-//                null,
-//                null,
-//                TestDataHelper.validPassword(),
-//                null,
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.PLAYER,
-//                testUsers.get("player"),
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                "admin",
-//                HttpStatus.SC_BAD_REQUEST);
-//
-//        updatePlayerTest(Constants.PLAYER,
-//                testUsers.get("player"),
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                "supervisor",
-//                HttpStatus.SC_BAD_REQUEST);
-//    }
-//
-//    @Test
-//    void updateAdminAsThemselvesTest(){
-//        updatePlayerTest(Constants.ADMIN,
-//                testUsers.get("admin"),
-//                16,
-//                "male",
-//                Constants.ADMIN,
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.ADMIN,
-//                testUsers.get("admin"),
-//                17,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.ADMIN,
-//                testUsers.get("admin"),
-//                null,
-//                "female",
-//                null,
-//                null,
-//                null,
-//                null,
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.ADMIN,
-//                testUsers.get("admin"),
-//                null,
-//                null,
-//                null,
-//                TestDataHelper.randomScreenName(),
-//                null,
-//                null,
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.ADMIN,
-//                testUsers.get("admin"),
-//                null,
-//                null,
-//                null,
-//                null,
-//                TestDataHelper.validPassword(),
-//                null,
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.ADMIN,
-//                testUsers.get("admin"),
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                "user",
-//                HttpStatus.SC_BAD_REQUEST);
-//
-//        updatePlayerTest(Constants.ADMIN,
-//                testUsers.get("admin"),
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                "supervisor",
-//                HttpStatus.SC_BAD_REQUEST);
-//    }
-//
-//    @Test
-//    void updateSupervisorAsThemselvesTest(){
-//        updatePlayerTest(Constants.SUPERVISOR,
-//                testUsers.get("supervisor"),
-//                16,
-//                "male",
-//                Constants.SUPERVISOR,
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.SUPERVISOR,
-//                testUsers.get("supervisor"),
-//                17,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.SUPERVISOR,
-//                testUsers.get("supervisor"),
-//                null,
-//                "female",
-//                null,
-//                null,
-//                null,
-//                null,
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.SUPERVISOR,
-//                testUsers.get("supervisor"),
-//                null,
-//                null,
-//                null,
-//                TestDataHelper.randomScreenName(),
-//                null,
-//                null,
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.SUPERVISOR,
-//                testUsers.get("supervisor"),
-//                null,
-//                null,
-//                null,
-//                null,
-//                TestDataHelper.validPassword(),
-//                null,
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.SUPERVISOR,
-//                testUsers.get("supervisor"),
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                "user",
-//                HttpStatus.SC_BAD_REQUEST);
-//
-//        updatePlayerTest(Constants.SUPERVISOR,
-//                testUsers.get("supervisor"),
-//                null,
-//                null,
-//                null,
-//                null,
-//                null,
-//                "admin",
-//                HttpStatus.SC_BAD_REQUEST);
-//    }
-//
-//    @Test
-//    void updatePlayerWithDuplicateLoginTest(){
-//        Integer player_1 = createPlayerTest(Constants.OG_SUPERVISOR,
-//                25,
-//                "female",
-//                "duplicate_test",
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_OK);
-//
-//        Integer player_2 = createPlayerTest(Constants.OG_SUPERVISOR,
-//                25,
-//                "female",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_OK);
-//
-//        updatePlayerTest(Constants.OG_SUPERVISOR,
-//                player_2,
-//                25,
-//                "female",
-//                "duplicate_test",
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_BAD_REQUEST);
-//    }
-//
-//    @Test
-//    void updatePlayerWithDuplicateScreenNameTest(){
-//        Integer player_1 = createPlayerTest(Constants.OG_SUPERVISOR,
-//                25,
-//                "female",
-//                TestDataHelper.randomLogin(),
-//                "duplicate_screen",
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_OK);
-//
-//        Integer player_2 = createPlayerTest(Constants.OG_SUPERVISOR,
-//                25,
-//                "female",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_OK);
-//
-//
-//        updatePlayerTest(Constants.OG_SUPERVISOR,
-//                player_2,
-//                16,
-//                "female",
-//                TestDataHelper.randomLogin(),
-//                "duplicate_screen",
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_BAD_REQUEST);
-//    }
-//
-//    @Test
-//    void updatePlayerWithIncorrectPasswordTest(){
-//        // < 7 characters
-//        updatePlayerTest(Constants.OG_SUPERVISOR,
-//                updateUsers.get("user"),
-//                25,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName()+ "_6",
-//                "1q2w3e",
-//                "user",
-//                HttpStatus.SC_BAD_REQUEST);
-//        // > 15 characters
-//        updatePlayerTest(Constants.OG_SUPERVISOR,
-//                updateUsers.get("user"),
-//                25,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName()+ "_16",
-//                "1q2w3e4r5t6y7u8i",
-//                "user",
-//                HttpStatus.SC_BAD_REQUEST);
-//        // special symbols
-//        updatePlayerTest(Constants.OG_SUPERVISOR,
-//                updateUsers.get("user"),
-//                25,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName()+ "_ss",
-//                "!q2w3e$r",
-//                "user",
-//                HttpStatus.SC_BAD_REQUEST);
-//        // cyrillic
-//        updatePlayerTest(Constants.OG_SUPERVISOR,
-//                updateUsers.get("user"),
-//                25,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName()+ "_cy",
-//                "Фq2w3e4Ы",
-//                "user",
-//                HttpStatus.SC_BAD_REQUEST);
-//    }
-//
-//    @Test
-//    void updatePlayerWithIncorrectAgeTest(){
-//        updatePlayerTest(Constants.OG_SUPERVISOR,
-//                updateUsers.get("user"),
-//                15,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_BAD_REQUEST);
-//
-//        updatePlayerTest(Constants.OG_SUPERVISOR,
-//                updateUsers.get("user"),
-//                61,
-//                "male",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "admin",
-//                HttpStatus.SC_BAD_REQUEST);
-//    }
-//
-//    @Test
-//    void updatePlayerWithIncorrectGenderTest(){
-//        updatePlayerTest(Constants.OG_SUPERVISOR,
-//                updateUsers.get("user"),
-//                25,
-//                "invalid",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "user",
-//                HttpStatus.SC_BAD_REQUEST);
-//
-//        updatePlayerTest(Constants.OG_SUPERVISOR,
-//                updateUsers.get("admin"),
-//                25,
-//                "invalid",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "admin",
-//                HttpStatus.SC_BAD_REQUEST);
-//
-//        updatePlayerTest(Constants.OG_SUPERVISOR,
-//                updateUsers.get("supervisor"),
-//                25,
-//                "invalid",
-//                TestDataHelper.randomLogin(),
-//                TestDataHelper.randomScreenName(),
-//                TestDataHelper.validPassword(),
-//                "supervisor",
-//                HttpStatus.SC_BAD_REQUEST);
-//    }
-//
-//}
+package co.spribe.pc.update;
+
+import co.spribe.pc.BaseTest;
+import co.spribe.pc.TestDataHelper;
+import co.spribe.pc.dto.Player;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import io.restassured.response.Response;
+import org.junit.jupiter.api.*;
+import co.spribe.pc.Constants;
+
+import static co.spribe.pc.AssertionHelper.*;
+import static co.spribe.pc.api.request.CreatePlayerRequest.createPlayer;
+import static co.spribe.pc.api.request.GetPlayerRequest.getPlayerRequest;
+import static co.spribe.pc.api.request.UpdatePlayerRequest.updatePlayerRequest;
+import static co.spribe.pc.api.response.CreatePlayerResponse.createPlayerResponse;
+
+@Epic("User API")
+@Feature("Update Player")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+//@Disabled("Temporarily excluded from test run")
+public class UpdatePlayerTest extends BaseTest {
+
+    @Test
+    @Story("Update player as player")
+    @Order(1)
+    void updatePlayerAsPlayerTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.randomPlayer();
+
+        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertPlayerNotUpdated(response); // TODO bug player is updated
+    }
+
+    @Test
+    @Story("Update player as admin")
+    @Order(2)
+    void updatePlayerAsAdminTest(){
+        Player player = TestDataHelper.randomAdmin();
+        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.randomPlayer();
+
+        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertStatusCodeAndContentType(response);
+        assertPlayerData(response, editedPlayer);
+    }
+
+    @Test
+    @Story("Update player as supervisor")
+    @Order(3)
+    void updatePlayerAsSupervisorTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.randomPlayer();
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertStatusCodeAndContentType(response);
+        assertPlayerData(response, editedPlayer);
+    }
+
+    @Test
+    @Story("Update admin as player")
+    @Order(4)
+    void updateAdminAsPlayerTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        player = TestDataHelper.randomAdmin();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.randomAdmin();
+
+        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertPlayerNotUpdated(response); // TODO bug player is updated
+    }
+
+    @Test
+    @Story("Update admin as admin")
+    @Order(5)
+    void updateAdminAsAdminTest(){
+        Player player = TestDataHelper.randomAdmin();
+        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        player = TestDataHelper.randomAdmin();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        originalPlayer.prettyPrint();
+
+        Player editedPlayer = TestDataHelper.randomAdmin();
+
+        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        response.prettyPrint();
+
+        assertStatusCodeAndContentType(response);
+        assertPlayerData(response, editedPlayer);
+    }
+
+    @Test
+    @Story("Update admin as supervisor")
+    @Order(6)
+    void updateAdminAsSupervisorTest(){
+        Player player = TestDataHelper.randomAdmin();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.randomAdmin();
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertStatusCodeAndContentType(response);
+        assertPlayerData(response, editedPlayer);
+    }
+
+    @Test
+    @Story("Update supervisor as player")
+    @Order(7)
+    void updateSupervisorAsPlayerTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+
+        Response s = getPlayerRequest(Constants.OG_SUPER_ID);
+        Player editedPlayer = TestDataHelper.randomSupervisor();
+
+        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
+                                                s.as(Player.class),
+                                                editedPlayer);
+
+        assertPlayerHasNoRights(response);
+    }
+
+    @Test
+    @Story("Update supervisor as admin")
+    @Order(8)
+    void updateSupervisorAsAdminTest(){
+        Player player = TestDataHelper.randomAdmin();
+        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Response s = getPlayerRequest(Constants.OG_SUPER_ID);
+        Player editedPlayer = TestDataHelper.randomSupervisor();
+
+        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
+                                                s.as(Player.class),
+                                                editedPlayer);
+
+        assertPlayerHasNoRights(response);
+    }
+
+    @Test
+    @Story("Update supervisor as supervisor")
+    @Order(9)
+    void updateSupervisorAsSupervisorTest(){
+        Response s = getPlayerRequest(Constants.OG_SUPER_ID);
+        Player editedPlayer = new Player().setAge(37);
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                s.as(Player.class),
+                editedPlayer);
+
+        assertStatusCodeAndContentType(response);
+        Assertions.assertEquals(response.as(Player.class).getAge(), editedPlayer.getAge());
+    }
+
+    @Test
+    @Story("Update player as themselves")
+    @Order(10)
+    void updatePlayerAsThemselvesTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.randomPlayer();
+
+        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
+                                                editor.as(Player.class),
+                                                editedPlayer);
+
+        assertStatusCodeAndContentType(response);
+        assertPlayerData(response, editedPlayer);
+    }
+
+    @Test
+    @Story("Update admin as themselves")
+    @Order(11)
+    void updateAdminAsThemselvesTest(){
+        Player player = TestDataHelper.randomAdmin();
+        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.randomAdmin();
+
+        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
+                                                editor.as(Player.class),
+                                                editedPlayer);
+
+        assertStatusCodeAndContentType(response);
+        assertPlayerData(response, editedPlayer);
+    }
+
+    @Test
+    @Story("Update only age")
+    @Order(12)
+    void updateOnlyAgeTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = new Player().setAge(25);
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertStatusCodeAndContentType(response);
+        Assertions.assertEquals(response.as(Player.class).getAge(), editedPlayer.getAge());
+    }
+
+    @Test
+    @Story("Update only login")
+    @Order(13)
+    void updateOnlyLoginTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = new Player().setLogin("edited_login");
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertStatusCodeAndContentType(response);
+        Assertions.assertEquals(response.as(Player.class).getLogin(), editedPlayer.getLogin());
+    }
+
+    @Test
+    @Story("Update only screen name")
+    @Order(14)
+    void updateOnlyScreenNameTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = new Player().setScreenName("edited_screen_name");
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertStatusCodeAndContentType(response);
+        Assertions.assertEquals(response.as(Player.class).getScreenName(), editedPlayer.getScreenName());
+    }
+
+    @Test
+    @Story("Update only password")
+    @Order(15)
+    void updateOnlyPasswordTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = new Player().setPassword("password7");
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertStatusCodeAndContentType(response);
+//        Assertions.assertEquals(response.as(Player.class).getPassword(), editedPlayer.getPassword());
+    }
+
+    @Test
+    @Story("Update only gender")
+    @Order(16)
+    void updateOnlyGenderTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = new Player().setGender("female");
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertStatusCodeAndContentType(response);
+        Assertions.assertEquals(response.as(Player.class).getGender(), editedPlayer.getGender());
+    }
+
+    @Test
+    @Story("Update only role")
+    @Order(17)
+    void updateOnlyRoleTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = new Player().setRole("admin");
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertStatusCodeAndContentType(response);
+        Assertions.assertNotEquals(response.as(Player.class).getRole(), editedPlayer.getRole());
+    }
+
+    @Test
+    @Story("Update player with duplicate login")
+    @Order(18)
+    void updatePlayerWithDuplicateLoginTest(){
+        Player player = TestDataHelper.playerWithDuplicateLogin();
+        Response duplicate = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.playerWithDuplicateLogin();
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertPlayerNotUpdated(response); // TODO bug player is updated
+    }
+
+    @Test
+    @Story("Update player with duplicate screen name")
+    @Order(19)
+    void updatePlayerWithDuplicateScreenNameTest(){
+        Player player = TestDataHelper.playerWithDuplicateScreenName();
+        Response duplicate = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.playerWithDuplicateScreenName();
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertPlayerNotUpdated(response); // TODO bug player is updated
+    }
+
+    @Test
+    @Story("Update player with short password")
+    @Order(20)
+    void updatePlayerWithShortPasswordTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.playerWithShortPassword();
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertPlayerNotUpdated(response); // TODO bug player is updated
+    }
+
+    @Test
+    @Story("Update player with long password")
+    @Order(21)
+    void updatePlayerWithLongPasswordTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.playerWithLongPassword();
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertPlayerNotUpdated(response); // TODO bug player is updated
+    }
+
+    @Test
+    @Story("Update player with invalid password")
+    @Order(22)
+    void updatePlayerWithInvalidPasswordTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.playerWithInvalidPassword();
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertPlayerNotUpdated(response); // TODO bug player is updated
+    }
+
+    @Test
+    @Story("Update player with young age")
+    @Order(23)
+    void updatePlayerWithYoungAgeTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.playerWithYoungAge();
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertPlayerNotUpdated(response); // TODO bug player is updated
+    }
+
+    @Test
+    @Story("Update player with old age")
+    @Order(24)
+    void updatePlayerWithOldAgeTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.playerWithOldAge();
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertPlayerNotUpdated(response); // TODO bug player is updated
+    }
+
+    @Test
+    @Story("Update player with invalid gender")
+    @Order(23)
+    void updatePlayerWithInvalidGenderTest(){
+        Player player = TestDataHelper.randomPlayer();
+        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        Player editedPlayer = TestDataHelper.playerWithInvalidGender();
+
+        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
+                                                originalPlayer.as(Player.class),
+                                                editedPlayer);
+
+        assertPlayerNotUpdated(response); // TODO bug player is updated
+    }
+
+}

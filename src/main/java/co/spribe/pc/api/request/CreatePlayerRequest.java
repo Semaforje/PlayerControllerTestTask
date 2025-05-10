@@ -20,7 +20,7 @@ public class CreatePlayerRequest implements Request {
                 .pathParam(Constants.EDITOR_QUERY_PARAM, editor)
                 .queryParams(getPlayerAsMap(player))
                 .when()
-                .get("/player/create/{editor}");
+                .get(Constants.CREATE_URI);
     }
 }
 

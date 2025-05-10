@@ -12,21 +12,43 @@ import static io.restassured.RestAssured.given;
 
 public class GetPlayerRequest implements Request {
 
-    protected Response getPlayerTest(Integer playerId, Player player) {
+    private int playerId;
+
+    public GetPlayerRequest(int playerId) {
+        this.playerId = playerId;
+    }
+
+    public int getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
+    }
+
+    public static Response getPlayerRequest(Player player) {
+        GetPlayerRequest getRequest = new GetPlayerRequest(player.getId());
 
         return given()
                 .filter(new AllureRestAssured())
                 .spec(RequestSpecFactory.getDefaultSpec())
-                .body("""
-                        {
-                          "playerId": "%s",
-                        }
-                        """.formatted(playerId))
+                .body(getRequest)
                 .when()
                 .post(Constants.GET_URI);
     }
 
-    protected Response getAllPlayersTest() {
+    public static Response getPlayerRequest(Integer playerId) {
+        GetPlayerRequest getRequest = new GetPlayerRequest(playerId);
+
+        return given()
+                .filter(new AllureRestAssured())
+                .spec(RequestSpecFactory.getDefaultSpec())
+                .body(getRequest)
+                .when()
+                .post(Constants.GET_URI);
+    }
+
+    public static Response getAllPlayersRequest() {
 
         return given()
                 .filter(new AllureRestAssured())
