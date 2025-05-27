@@ -1,6 +1,7 @@
 package co.spribe.pc;
 
-import co.spribe.pc.dto.Player;
+import co.spribe.pc.api.constants.ConstantsNames;
+import co.spribe.pc.dto.PlayerDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Map;
@@ -9,84 +10,27 @@ import java.util.UUID;
 
 public class TestDataHelper {
 
-    public static Player randomPlayer() {
-        return new Player(
+    public static PlayerDto getRandomPlayer() {
+        return getPlayerWithRole(ConstantsNames.ROLE_USER);
+    }
+
+    public static PlayerDto getRandomAdmin() {
+        return getPlayerWithRole(ConstantsNames.ROLE_ADMIN);
+    }
+
+    public static PlayerDto getRandomSupervisor() {
+        return getPlayerWithRole(ConstantsNames.ROLE_SUPERVISOR);
+    }
+
+    public static PlayerDto getPlayerWithRole(String role) {
+        return new PlayerDto(
                 getRandomValidAge(),
                 "male",
                 randomLogin(),
                 validPassword(),
-                Constants.ROLE_PLAYER,
-                randomScreenName() + "P"
+                role,
+                randomScreenName()
         );
-    }
-
-    public static Player randomAdmin() {
-        return new Player(
-                getRandomValidAge(),
-                "male",
-                randomLogin(),
-                validPassword(),
-                Constants.ROLE_ADMIN,
-                randomScreenName() + "A"
-        );
-    }
-
-    public static Player randomSupervisor() {
-        return new Player(
-                getRandomValidAge(),
-                "male",
-                randomLogin(),
-                validPassword(),
-                Constants.ROLE_SUPERVISOR,
-                randomScreenName() + "S"
-        );
-    }
-
-    public static Player playerWithDuplicateLogin() {
-        Player player = randomPlayer();
-        player.setLogin("dn_duplicate");
-        return player;
-    }
-
-    public static Player playerWithDuplicateScreenName() {
-        Player player = randomPlayer();
-        player.setScreenName("dn_duplicate");
-        return player;
-    }
-    public static Player playerWithShortPassword() {
-        Player player = randomPlayer();
-        player.setPassword("1q2w3e");
-        return player;
-    }
-
-    public static Player playerWithLongPassword() {
-        Player player = randomPlayer();
-        player.setPassword("1q2w3e4r5t6y7u8i");
-        return player;
-    }
-
-    public static Player playerWithInvalidPassword() {
-        Player player = randomPlayer();
-        player.setPassword("!Q@W#E$R");
-        return player;
-    }
-
-    public static Player playerWithYoungAge() {
-        Player player = randomPlayer();
-        player.setAge(15);
-        return player;
-    }
-
-    public static Player playerWithOldAge() {
-        Player player = randomPlayer();
-        player.setAge(61);
-        return player;
-    }
-
-    public static Player playerWithInvalidGender() {
-        Player player = randomPlayer();
-        player.setGender("invalid");
-        return player;
     }
 
     private static String getRandomString(int length) {
@@ -110,7 +54,7 @@ public class TestDataHelper {
         return getRandomString( 8);
     }
 
-    public static Map<String, Object> getPlayerAsMap(Player player){
+    public static Map<String, Object> getPlayerAsMap(PlayerDto player){
         ObjectMapper mapper = new ObjectMapper();
 
         Map<String, Object> map = mapper.convertValue(player, Map.class);

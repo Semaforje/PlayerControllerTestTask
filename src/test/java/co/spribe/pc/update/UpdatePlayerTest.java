@@ -2,19 +2,22 @@ package co.spribe.pc.update;
 
 import co.spribe.pc.BaseTest;
 import co.spribe.pc.TestDataHelper;
-import co.spribe.pc.dto.Player;
+import co.spribe.pc.api.constants.ConstantsIDs;
+import co.spribe.pc.api.constants.ConstantsNames;
+import co.spribe.pc.api.constants.ConstantsTestData;
+import co.spribe.pc.dto.PlayerDto;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
-import co.spribe.pc.Constants;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static co.spribe.pc.AssertionHelper.*;
-import static co.spribe.pc.api.request.CreatePlayerRequest.createPlayer;
+import static co.spribe.pc.api.request.CreatePlayerRequest.createPlayerRequest;
 import static co.spribe.pc.api.request.GetPlayerRequest.getPlayerRequest;
 import static co.spribe.pc.api.request.UpdatePlayerRequest.updatePlayerRequest;
-import static co.spribe.pc.api.response.CreatePlayerResponse.createPlayerResponse;
 
 @Epic("User API")
 @Feature("Update Player")
@@ -24,16 +27,15 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update player as player")
-    @Order(1)
     void updatePlayerAsPlayerTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.randomPlayer();
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response editor = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = TestDataHelper.getRandomPlayer();
 
-        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(editor.as(PlayerDto.class).getLogin(),
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertPlayerNotUpdated(response); // TODO bug player is updated
@@ -41,16 +43,15 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update player as admin")
-    @Order(2)
     void updatePlayerAsAdminTest(){
-        Player player = TestDataHelper.randomAdmin();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.randomPlayer();
+        PlayerDto player = TestDataHelper.getRandomAdmin();
+        Response editor = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = TestDataHelper.getRandomPlayer();
 
-        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(editor.as(PlayerDto.class).getLogin(),
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertStatusCodeAndContentType(response);
@@ -59,14 +60,13 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update player as supervisor")
-    @Order(3)
     void updatePlayerAsSupervisorTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.randomPlayer();
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = TestDataHelper.getRandomPlayer();
 
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertStatusCodeAndContentType(response);
@@ -75,16 +75,15 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update admin as player")
-    @Order(4)
     void updateAdminAsPlayerTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        player = TestDataHelper.randomAdmin();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.randomAdmin();
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response editor = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        player = TestDataHelper.getRandomAdmin();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = TestDataHelper.getRandomAdmin();
 
-        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(editor.as(PlayerDto.class).getLogin(),
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertPlayerNotUpdated(response); // TODO bug player is updated
@@ -92,18 +91,17 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update admin as admin")
-    @Order(5)
     void updateAdminAsAdminTest(){
-        Player player = TestDataHelper.randomAdmin();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        player = TestDataHelper.randomAdmin();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        PlayerDto player = TestDataHelper.getRandomAdmin();
+        Response editor = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        player = TestDataHelper.getRandomAdmin();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
         originalPlayer.prettyPrint();
 
-        Player editedPlayer = TestDataHelper.randomAdmin();
+        PlayerDto editedPlayer = TestDataHelper.getRandomAdmin();
 
-        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(editor.as(PlayerDto.class).getLogin(),
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         response.prettyPrint();
@@ -114,14 +112,13 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update admin as supervisor")
-    @Order(6)
     void updateAdminAsSupervisorTest(){
-        Player player = TestDataHelper.randomAdmin();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.randomAdmin();
+        PlayerDto player = TestDataHelper.getRandomAdmin();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = TestDataHelper.getRandomAdmin();
 
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertStatusCodeAndContentType(response);
@@ -130,16 +127,15 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update supervisor as player")
-    @Order(7)
     void updateSupervisorAsPlayerTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response editor = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
 
-        Response s = getPlayerRequest(Constants.OG_SUPER_ID);
-        Player editedPlayer = TestDataHelper.randomSupervisor();
+        Response s = getPlayerRequest(ConstantsIDs.OG_SUPER_ID);
+        PlayerDto editedPlayer = TestDataHelper.getRandomSupervisor();
 
-        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
-                                                s.as(Player.class),
+        Response response = updatePlayerRequest(editor.as(PlayerDto.class).getLogin(),
+                                                s.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertPlayerHasNoRights(response);
@@ -147,15 +143,14 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update supervisor as admin")
-    @Order(8)
     void updateSupervisorAsAdminTest(){
-        Player player = TestDataHelper.randomAdmin();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Response s = getPlayerRequest(Constants.OG_SUPER_ID);
-        Player editedPlayer = TestDataHelper.randomSupervisor();
+        PlayerDto player = TestDataHelper.getRandomAdmin();
+        Response editor = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        Response s = getPlayerRequest(ConstantsIDs.OG_SUPER_ID);
+        PlayerDto editedPlayer = TestDataHelper.getRandomSupervisor();
 
-        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
-                                                s.as(Player.class),
+        Response response = updatePlayerRequest(editor.as(PlayerDto.class).getLogin(),
+                                                s.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertPlayerHasNoRights(response);
@@ -163,29 +158,27 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update supervisor as supervisor")
-    @Order(9)
     void updateSupervisorAsSupervisorTest(){
-        Response s = getPlayerRequest(Constants.OG_SUPER_ID);
-        Player editedPlayer = new Player().setAge(37);
+        Response s = getPlayerRequest(ConstantsIDs.OG_SUPER_ID);
+        PlayerDto editedPlayer = new PlayerDto().setAge(37);
 
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                s.as(Player.class),
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                s.as(PlayerDto.class),
                 editedPlayer);
 
         assertStatusCodeAndContentType(response);
-        Assertions.assertEquals(response.as(Player.class).getAge(), editedPlayer.getAge());
+        Assertions.assertEquals(response.as(PlayerDto.class).getAge(), editedPlayer.getAge());
     }
 
     @Test
     @Story("Update player as themselves")
-    @Order(10)
     void updatePlayerAsThemselvesTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.randomPlayer();
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response editor = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = TestDataHelper.getRandomPlayer();
 
-        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
-                                                editor.as(Player.class),
+        Response response = updatePlayerRequest(editor.as(PlayerDto.class).getLogin(),
+                                                editor.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertStatusCodeAndContentType(response);
@@ -194,14 +187,13 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update admin as themselves")
-    @Order(11)
     void updateAdminAsThemselvesTest(){
-        Player player = TestDataHelper.randomAdmin();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.randomAdmin();
+        PlayerDto player = TestDataHelper.getRandomAdmin();
+        Response editor = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = TestDataHelper.getRandomAdmin();
 
-        Response response = updatePlayerRequest(editor.as(Player.class).getLogin(),
-                                                editor.as(Player.class),
+        Response response = updatePlayerRequest(editor.as(PlayerDto.class).getLogin(),
+                                                editor.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertStatusCodeAndContentType(response);
@@ -210,61 +202,57 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update only age")
-    @Order(12)
     void updateOnlyAgeTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = new Player().setAge(25);
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = new PlayerDto().setAge(25);
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertStatusCodeAndContentType(response);
-        Assertions.assertEquals(response.as(Player.class).getAge(), editedPlayer.getAge());
+        Assertions.assertEquals(response.as(PlayerDto.class).getAge(), editedPlayer.getAge());
     }
 
     @Test
     @Story("Update only login")
-    @Order(13)
     void updateOnlyLoginTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = new Player().setLogin("edited_login");
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = new PlayerDto().setLogin("edited_login");
 
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertStatusCodeAndContentType(response);
-        Assertions.assertEquals(response.as(Player.class).getLogin(), editedPlayer.getLogin());
+        Assertions.assertEquals(response.as(PlayerDto.class).getLogin(), editedPlayer.getLogin());
     }
 
     @Test
     @Story("Update only screen name")
-    @Order(14)
     void updateOnlyScreenNameTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = new Player().setScreenName("edited_screen_name");
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = new PlayerDto().setScreenName("edited_screen_name");
 
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertStatusCodeAndContentType(response);
-        Assertions.assertEquals(response.as(Player.class).getScreenName(), editedPlayer.getScreenName());
+        Assertions.assertEquals(response.as(PlayerDto.class).getScreenName(), editedPlayer.getScreenName());
     }
 
     @Test
     @Story("Update only password")
-    @Order(15)
     void updateOnlyPasswordTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = new Player().setPassword("password7");
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = new PlayerDto().setPassword("password7");
 
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertStatusCodeAndContentType(response);
@@ -273,48 +261,45 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update only gender")
-    @Order(16)
     void updateOnlyGenderTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = new Player().setGender("female");
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = new PlayerDto().setGender("female");
 
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertStatusCodeAndContentType(response);
-        Assertions.assertEquals(response.as(Player.class).getGender(), editedPlayer.getGender());
+        Assertions.assertEquals(response.as(PlayerDto.class).getGender(), editedPlayer.getGender());
     }
 
     @Test
     @Story("Update only role")
-    @Order(17)
     void updateOnlyRoleTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = new Player().setRole("admin");
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player );
+        PlayerDto editedPlayer = new PlayerDto().setRole("admin");
 
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertStatusCodeAndContentType(response);
-        Assertions.assertNotEquals(response.as(Player.class).getRole(), editedPlayer.getRole());
+        Assertions.assertNotEquals(response.as(PlayerDto.class).getRole(), editedPlayer.getRole());
     }
 
     @Test
     @Story("Update player with duplicate login")
-    @Order(18)
     void updatePlayerWithDuplicateLoginTest(){
-        Player player = TestDataHelper.playerWithDuplicateLogin();
-        Response duplicate = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.playerWithDuplicateLogin();
+        PlayerDto player = TestDataHelper.getRandomPlayer().setLogin(ConstantsTestData.DUPLICATE_NAME);
+        Response duplicate = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = TestDataHelper.getRandomPlayer().setLogin(ConstantsTestData.DUPLICATE_NAME);
 
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertPlayerNotUpdated(response); // TODO bug player is updated
@@ -322,91 +307,48 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update player with duplicate screen name")
-    @Order(19)
     void updatePlayerWithDuplicateScreenNameTest(){
-        Player player = TestDataHelper.playerWithDuplicateScreenName();
-        Response duplicate = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.playerWithDuplicateScreenName();
+        PlayerDto player = TestDataHelper.getRandomPlayer().setScreenName(ConstantsTestData.DUPLICATE_NAME);
+        Response duplicate = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = TestDataHelper.getRandomPlayer().setScreenName(ConstantsTestData.DUPLICATE_NAME);
 
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertPlayerNotUpdated(response); // TODO bug player is updated
     }
 
-    @Test
-    @Story("Update player with short password")
-    @Order(20)
-    void updatePlayerWithShortPasswordTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.playerWithShortPassword();
+    @ParameterizedTest
+    @ValueSource(strings = {
+            ConstantsTestData.SHORT_PASSWORD,
+            ConstantsTestData.LONG_PASSWORD,
+            ConstantsTestData.SPECIAL_SYMBOLS_PASSWORD})
+    @Story("update a player with incorrect password")
+    void updatePlayerWithIncorrectPasswordTest(String password){
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = TestDataHelper.getRandomPlayer().setPassword(password);
 
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertPlayerNotUpdated(response); // TODO bug player is updated
     }
 
-    @Test
-    @Story("Update player with long password")
-    @Order(21)
-    void updatePlayerWithLongPasswordTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.playerWithLongPassword();
+    @ParameterizedTest
+    @ValueSource(ints = {ConstantsTestData.YOUNG_AGE, ConstantsTestData.OLD_AGE})
+    @Story("Create a player with incorrect age")
+    void updatePlayerWithIncorrectAgeTest(Integer age){
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = TestDataHelper.getRandomPlayer().setAge(age);
 
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
-                                                editedPlayer);
-
-        assertPlayerNotUpdated(response); // TODO bug player is updated
-    }
-
-    @Test
-    @Story("Update player with invalid password")
-    @Order(22)
-    void updatePlayerWithInvalidPasswordTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.playerWithInvalidPassword();
-
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
-                                                editedPlayer);
-
-        assertPlayerNotUpdated(response); // TODO bug player is updated
-    }
-
-    @Test
-    @Story("Update player with young age")
-    @Order(23)
-    void updatePlayerWithYoungAgeTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.playerWithYoungAge();
-
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
-                                                editedPlayer);
-
-        assertPlayerNotUpdated(response); // TODO bug player is updated
-    }
-
-    @Test
-    @Story("Update player with old age")
-    @Order(24)
-    void updatePlayerWithOldAgeTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.playerWithOldAge();
-
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertPlayerNotUpdated(response); // TODO bug player is updated
@@ -414,14 +356,13 @@ public class UpdatePlayerTest extends BaseTest {
 
     @Test
     @Story("Update player with invalid gender")
-    @Order(23)
     void updatePlayerWithInvalidGenderTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response originalPlayer = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Player editedPlayer = TestDataHelper.playerWithInvalidGender();
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response originalPlayer = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        PlayerDto editedPlayer = TestDataHelper.getRandomPlayer().setGender(ConstantsTestData.INVALID_GENDER);
 
-        Response response = updatePlayerRequest(Constants.OG_SUPERVISOR,
-                                                originalPlayer.as(Player.class),
+        Response response = updatePlayerRequest(ConstantsNames.OG_SUPERVISOR,
+                                                originalPlayer.as(PlayerDto.class),
                                                 editedPlayer);
 
         assertPlayerNotUpdated(response); // TODO bug player is updated

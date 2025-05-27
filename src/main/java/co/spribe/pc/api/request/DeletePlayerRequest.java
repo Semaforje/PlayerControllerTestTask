@@ -1,17 +1,15 @@
 package co.spribe.pc.api.request;
 
-import co.spribe.pc.Constants;
+import co.spribe.pc.api.constants.ConstantsURL;
 import co.spribe.pc.RequestSpecFactory;
 import co.spribe.pc.api.Request;
-import co.spribe.pc.dto.Player;
-import io.qameta.allure.restassured.AllureRestAssured;
-
+import co.spribe.pc.dto.PlayerDto;
 import io.restassured.response.Response;
 
 
 import static io.restassured.RestAssured.given;
 
-public class DeletePlayerRequest implements Request {
+public class DeletePlayerRequest extends AbstractRequest {
 
     private int playerId;
 
@@ -27,15 +25,14 @@ public class DeletePlayerRequest implements Request {
         this.playerId = playerId;
     }
 
-    public static Response deletePlayerRequest(String editor, Player player){
+    public static Response deletePlayerRequest(String editor, PlayerDto player){
         DeletePlayerRequest deleteRequest = new DeletePlayerRequest(player.getId());
 
         return given()
-                .filter(new AllureRestAssured())
                 .spec(RequestSpecFactory.getDefaultSpec())
-                .pathParam(Constants.EDITOR_QUERY_PARAM, editor)
+                .pathParams(AbstractRequest.getPathParams(editor))
                 .body(deleteRequest)
                 .when()
-                .delete(Constants.DELETE_URI);
+                .delete(ConstantsURL.DELETE_URI);
     }
 }

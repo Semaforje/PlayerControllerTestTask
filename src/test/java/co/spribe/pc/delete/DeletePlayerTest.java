@@ -1,20 +1,22 @@
 package co.spribe.pc.delete;
 
 import co.spribe.pc.BaseTest;
-import co.spribe.pc.Constants;
+import co.spribe.pc.api.constants.ConstantsIDs;
+import co.spribe.pc.api.constants.ConstantsNames;
 import co.spribe.pc.TestDataHelper;
-import co.spribe.pc.dto.Player;
+import co.spribe.pc.dto.PlayerDto;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static co.spribe.pc.AssertionHelper.*;
-import static co.spribe.pc.api.request.CreatePlayerRequest.createPlayer;
+import static co.spribe.pc.api.request.CreatePlayerRequest.createPlayerRequest;
 import static co.spribe.pc.api.request.DeletePlayerRequest.deletePlayerRequest;
 import static co.spribe.pc.api.request.GetPlayerRequest.getPlayerRequest;
-import static co.spribe.pc.api.response.CreatePlayerResponse.createPlayerResponse;
 
 @Epic("User API")
 @Feature("Delete Player")
@@ -22,114 +24,90 @@ import static co.spribe.pc.api.response.CreatePlayerResponse.createPlayerRespons
 //@Disabled("Temporarily excluded from test run")
 public class DeletePlayerTest extends BaseTest {
 
-    @Test
-    @Story("Delete player as player")
-    @Order(1)
-    void deletePlayerAsPlayerTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        player = TestDataHelper.randomPlayer();
-        Response p = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+    @ParameterizedTest
+    @ValueSource(strings = {
+            ConstantsNames.ROLE_USER,
+            ConstantsNames.ROLE_ADMIN})
+    @Story("Delete a player with user and admin roles as Player")
+    void deleteUserAndAdminAsUserTest(String role){
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response editor = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        player = TestDataHelper.getPlayerWithRole(role);
+        Response p = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
 
-        Response response = deletePlayerRequest(editor.as(Player.class).getLogin(), p.as(Player.class));
+        Response response = deletePlayerRequest(editor.as(PlayerDto.class).getLogin(), p.as(PlayerDto.class));
 
         assertPlayerNotDeleted(response); // TODO Bug user is deleted
     }
 
     @Test
-    @Story("Delete admin as player")
-    @Order(2)
-    void deleteAdminAsPlayerTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        player = TestDataHelper.randomAdmin();
-        Response p = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-
-        Response response = deletePlayerRequest(editor.as(Player.class).getLogin(), p.as(Player.class));
-
-        assertPlayerNotDeleted(response); //TODO Bug user is deleted
-    }
-
-    @Test
     @Story("Delete supervisor as player")
-    @Order(3)
     void deleteSupervisorAsPlayerTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Response p = getPlayerRequest(Constants.OG_SUPER_ID);
-        Response response = deletePlayerRequest(editor.as(Player.class).getLogin(), p.as(Player.class));
+        PlayerDto player = TestDataHelper.getRandomPlayer();
+        Response editor = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        Response p = getPlayerRequest(ConstantsIDs.OG_SUPER_ID);
+        Response response = deletePlayerRequest(editor.as(PlayerDto.class).getLogin(), p.as(PlayerDto.class));
 
         assertPlayerHasNoRights(response);
     }
 
     @Test
     @Story("Delete player as admin")
-    @Order(4)
     void deletePlayerAsAdminTest(){
-        Player player = TestDataHelper.randomAdmin();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        player = TestDataHelper.randomPlayer();
-        Response p = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        PlayerDto player = TestDataHelper.getRandomAdmin();
+        Response editor = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        player = TestDataHelper.getRandomPlayer();
+        Response p = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
 
-        Response response = deletePlayerRequest(editor.as(Player.class).getLogin(), p.as(Player.class));
+        Response response = deletePlayerRequest(editor.as(PlayerDto.class).getLogin(), p.as(PlayerDto.class));
 
-        assertPlayerDeleted(response, player);
+        assertPlayerDeleted(response);
+        getDeletedPlayerEmptyData(p);
     }
 
     @Test
     @Story("Delete admin as admin")
-    @Order(5)
     void deleteAdminAsAdminTest(){
-        Player player = TestDataHelper.randomAdmin();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        player = TestDataHelper.randomAdmin();
-        Response p = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
+        PlayerDto player = TestDataHelper.getRandomAdmin();
+        Response editor = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        player = TestDataHelper.getRandomAdmin();
+        Response p = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
 
-        Response response = deletePlayerRequest(editor.as(Player.class).getLogin(), p.as(Player.class));
+        Response response = deletePlayerRequest(editor.as(PlayerDto.class).getLogin(), p.as(PlayerDto.class));
 
         assertPlayerNotDeleted(response); // TODO bug user is deleted
     }
 
     @Test
     @Story("Delete supervisor as admin")
-    @Order(6)
     void deleteSupervisorAsAdminTest(){
-        Player player = TestDataHelper.randomAdmin();
-        Response editor = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Response p = getPlayerRequest(Constants.OG_SUPER_ID);
-        Response response = deletePlayerRequest(editor.as(Player.class).getLogin(), p.as(Player.class));
+        PlayerDto player = TestDataHelper.getRandomAdmin();
+        Response editor = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        Response p = getPlayerRequest(ConstantsIDs.OG_SUPER_ID);
+        Response response = deletePlayerRequest(editor.as(PlayerDto.class).getLogin(), p.as(PlayerDto.class));
 
         assertPlayerHasNoRights(response);
     }
 
-    @Test
-    @Story("Delete player as Supervisor")
-    @Order(7)
-    void deletePlayerAsSupervisorTest(){
-        Player player = TestDataHelper.randomPlayer();
-        Response p = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Response response = deletePlayerRequest(Constants.OG_SUPERVISOR, p.as(Player.class));
+    @ParameterizedTest
+    @ValueSource(strings = {
+            ConstantsNames.ROLE_USER,
+            ConstantsNames.ROLE_ADMIN})
+    @Story("Delete a player with user and admin roles as Supervisor")
+    void deleteUserAndAdminAsSupervisorTest(String role){
+        PlayerDto player = TestDataHelper.getPlayerWithRole(role);
+        Response p = createPlayerRequest(ConstantsNames.OG_SUPERVISOR, player);
+        Response response = deletePlayerRequest(ConstantsNames.OG_SUPERVISOR, p.as(PlayerDto.class));
 
-        assertPlayerDeleted(response, player);
-    }
-
-    @Test
-    @Story("Delete admin as Supervisor")
-    @Order(8)
-    void deleteAdminAsSupervisorTest(){
-        Player player = TestDataHelper.randomAdmin();
-        Response p = createPlayerResponse(createPlayer(Constants.OG_SUPERVISOR, player));
-        Response response = deletePlayerRequest(Constants.OG_SUPERVISOR, p.as(Player.class));
-
-        assertPlayerDeleted(response, player);
+        assertPlayerDeleted(response);
+        getDeletedPlayerEmptyData(p);
     }
 
     @Test
     @Story("Delete supervisor as Supervisor")
-    @Order(9)
     void deleteSupervisorAsSupervisorTest(){
-        Response p = getPlayerRequest(Constants.OG_SUPER_ID);
-        Response response = deletePlayerRequest(Constants.OG_SUPERVISOR, p.as(Player.class));
+        Response p = getPlayerRequest(ConstantsIDs.OG_SUPER_ID);
+        Response response = deletePlayerRequest(ConstantsNames.OG_SUPERVISOR, p.as(PlayerDto.class));
 
         assertPlayerHasNoRights(response);
     }
